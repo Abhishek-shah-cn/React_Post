@@ -12,7 +12,6 @@ code {
     monospace;
 }
 .card-box {
-  width: 300px;
   border: 1px solid grey;
   overflow: hidden;
   margin-bottom: 25px;
@@ -23,7 +22,7 @@ code {
   width: 100%;
   height: auto;
 }
-.details{
+.details {
   display: flex;
   justify-content: space-between;
 }
@@ -35,6 +34,6 @@ code {
   display: flex;
   justify-content: space-between;
 }
-p{
+p {
   font-size: small;
 }

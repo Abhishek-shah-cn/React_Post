@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
-import Postlist from "./Postlist";
+import Post from "./Post";
 import "../Style/App.css";
 
 class App extends Component {
@@ -10,13 +10,16 @@ class App extends Component {
     this.state = {
       loading: true,
       posts: [],
-      offest: 0,
+      offset: 0,
+      perPage: 4,
+      currentPage: 0,
+      currentPosts: [],
     };
   }
 
   // Call the API By axios----------------------------------------------------------------
 
-  componentDidMount() {
+  receivedData() {
     function getPage1() {
       return axios.get("http://www.mocky.io/v2/59ac293b100000d60bf9c239");
     }
@@ -29,67 +32,86 @@ class App extends Component {
       return axios.get("http://www.mocky.io/v2/59b3f0b0100000e30b236b7e");
     }
 
+    let allPostsDetails = [];
+
     //   Get all three api in getPage1(), getPage2(), getPage3()
 
     Promise.all([getPage1(), getPage2(), getPage3()]).then((results) => {
       const pageOneResult = results[0];
       const pageTwoResult = results[1];
       const pageThreeResult = results[2];
-      console.log("result", pageOneResult, pageTwoResult, pageThreeResult);
       // merged all response in single array
-      let allPostsDetails = [
+      allPostsDetails = [
         ...pageOneResult.data.posts,
         ...pageTwoResult.data.posts,
         ...pageThreeResult.data.posts,
       ];
-      console.log("allPostsDetails", allPostsDetails);
+
+      const data = allPostsDetails;
+      const slice = data.slice(
+        this.state.offset,
+        this.state.offset + this.state.perPage
+      );
+      const postData = slice.map((pd) => <Post data={pd}></Post>);
       this.setState({
-        posts: allPostsDetails,
+        pageCount: Math.ceil(data.length / this.state.perPage),
+        postData,
+        currentPosts: slice,
         loading: false,
       });
     });
   }
 
-  // This function is not working right now
-  handlePageClick = (data) => {
-    let selected = data;
-    let offset = Math.ceil(selected * this.props.perPage);
+  handlePageClick = (e) => {
+    const selectedPage = e.selected;
+    const offset = selectedPage * this.state.perPage;
 
-    this.setState({ offset: offset });
+    this.setState(
+      {
+        currentPage: selectedPage,
+        offset: offset,
+      },
+      () => {
+        this.receivedData();
+      }
+    );
   };
 
-  sortDate = () => {
-    console.log("Sorting----", this.state.posts);
-    // const { list } = this.props;
-    // list.sort((product1, product2) => product1.price - product2.price);
-    // this.setState({ list: list });
-    const { postslist } = this.state.posts;
-    // let newPostlist = Postlist.reverse()
+  // General Function for Sorting based on the argument passed
+  sortDate = (sort_param) => {
+    const postslist = this.state.currentPosts;
     this.setState({
-      post: postslist.sort((a, b) => a.date > b.date),
+      postData: postslist
+        .sort((a, b) => a[sort_param] - b[sort_param])
+        .map((pd) => <Post data={pd}></Post>),
     });
   };
+
+  componentDidMount() {
+    this.receivedData();
+  }
 
   render() {
     return (
       <div>
-        <header className="App-header">
-          {this.state.loading ? (
-            <div>Loading . . . </div>
-          ) : (
+        {this.state.loading ? (
+          <div>Loading . . . </div>
+        ) : (
+          <div id="main-container">
             <div>
-              <div>
-                <button className="sortbttn" onClick={this.sortDate}>
-                  Sort By Date
-                </button>
-              </div>
-              <Postlist
-                className="commentBox"
-                posts={this.state.posts}
-              ></Postlist>
-              {/* Pagination is Given but not active currently */}
+              <button
+                className="sortbttn"
+                onClick={() => this.sortDate("event_date")}
+              >
+                Sort By Date
+              </button>
+            </div>
+
+            <div className="postList">{this.state.postData}</div>
+
+            <div>
               <ReactPaginate
-                previousLabel={"previous"}
+                previousLabel={"prev"}
                 nextLabel={"next"}
                 breakLabel={"..."}
                 breakClassName={"break-me"}
@@ -98,11 +120,12 @@ class App extends Component {
                 pageRangeDisplayed={5}
                 onPageChange={this.handlePageClick}
                 containerClassName={"pagination"}
+                subContainerClassName={"pages pagination"}
                 activeClassName={"active"}
               />
             </div>
-          )}
-        </header>
+          </div>
+        )}
       </div>
     );
   }
