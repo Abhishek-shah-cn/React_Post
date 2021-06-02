@@ -12,6 +12,7 @@ class Post extends Component {
 
       //Received Props & Rendring the data 
       <div>
+        
         <div className="card-box">
           <img
             src={this.props.data.thumbnail_image}

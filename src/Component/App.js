@@ -5,18 +5,16 @@ import Postlist from "./Postlist";
 import "../Style/App.css";
 
 class App extends Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       posts: [],
-      offest:0,
+      offest: 0,
     };
   }
 
-   // Call the API By axios----------------------------------------------------------------
+  // Call the API By axios----------------------------------------------------------------
 
   componentDidMount() {
     function getPage1() {
@@ -31,7 +29,7 @@ class App extends Component {
       return axios.get("http://www.mocky.io/v2/59b3f0b0100000e30b236b7e");
     }
 
-  //   Get all three api in getPage1(), getPage2(), getPage3()
+    //   Get all three api in getPage1(), getPage2(), getPage3()
 
     Promise.all([getPage1(), getPage2(), getPage3()]).then((results) => {
       const pageOneResult = results[0];
@@ -50,16 +48,26 @@ class App extends Component {
         loading: false,
       });
     });
-
-   
   }
 
-// This function is not working right now
+  // This function is not working right now
   handlePageClick = (data) => {
-    let selected = data
+    let selected = data;
     let offset = Math.ceil(selected * this.props.perPage);
 
     this.setState({ offset: offset });
+  };
+
+  sortDate = () => {
+    console.log("Sorting----", this.state.posts);
+    // const { list } = this.props;
+    // list.sort((product1, product2) => product1.price - product2.price);
+    // this.setState({ list: list });
+    const { postslist } = this.state.posts;
+    // let newPostlist = Postlist.reverse()
+    this.setState({
+      post: postslist.sort((a, b) => a.date > b.date),
+    });
   };
 
   render() {
@@ -70,6 +78,11 @@ class App extends Component {
             <div>Loading . . . </div>
           ) : (
             <div>
+              <div>
+                <button className="sortbttn" onClick={this.sortDate}>
+                  Sort By Date
+                </button>
+              </div>
               <Postlist
                 className="commentBox"
                 posts={this.state.posts}
