@@ -24,9 +24,9 @@ class Post extends Component {
           <img src={this.props.data.thumbnail_image} alt="img" />
 
           <div className="details">
-            <h4> {this.props.data.event_name} </h4>
+            <h1> {this.props.data.event_name} </h1>
 
-            <span className="date">🔀 {this.props.data.shares}</span>
+            
           </div>
           <div className="icon">
             <div className="icon-text">
@@ -36,14 +36,16 @@ class Post extends Component {
 
             <div className="icon-text">
               {" "}
-              👀<p> {this.props.data.views} Likes</p>
+              👀<p> {this.props.data.views} Views</p>
             </div>
+            <span className="date">🔀 <p>{this.props.data.shares}</p></span>
           </div>
           <p> {new Date(this.props.data.event_date).toDateString()}</p>
         </div>
 
-        <div style={{ display: this.state.isOpen ? "block" : "none" }}>
-          <p>dfljdsfljndsfjndskjvnkj</p>
+        <div className="belowup" style={{ display: this.state.isOpen ? "block" : "none" }}>
+          <p >Total 👍{this.props.data.likes}</p>
+          <p>Created Date 📆 :- {new Date(this.props.data.event_date).toDateString()}</p>
         </div>
       </div>
     );

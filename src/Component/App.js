@@ -93,22 +93,40 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div >
         {this.state.loading ? (
-          <div>Loading . . . </div>
+          <div>
+            <h1>Loading . . .</h1>
+            <div className="loader"></div>{" "}
+          </div>
         ) : (
           <div id="main-container">
+          <div className="main">  
             <div>
               <button
                 className="sortbttn"
                 onClick={() => this.sortDate("event_date")}
               >
-                Sort By Date
+                <span>Sort By Date</span>
+              </button>
+
+              <button
+                className="sortbttn"
+                onClick={() => this.sortDate("likes")}
+              >
+                <span>Sort By Likes</span>
+              </button>
+
+              <button
+                className="sortbttn"
+                onClick={() => this.sortDate("views")}
+              >
+                <span>Sort By Views</span>
               </button>
             </div>
 
             <div className="postList">{this.state.postData}</div>
-
+            </div>
             <div>
               <ReactPaginate
                 previousLabel={"prev"}

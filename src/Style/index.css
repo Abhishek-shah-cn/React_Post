@@ -24,7 +24,7 @@ code {
 }
 .details {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .details p {
   font-size: small;
@@ -35,5 +35,12 @@ code {
   justify-content: space-between;
 }
 p {
-  font-size: small;
+  font-size: x-large;
+}
+.belowup {
+  width: 100%;
+  height: auto;
+  transition-timing-function: ease;
+  background-color: #dc3545;
+  margin-top: -5%;
 }
